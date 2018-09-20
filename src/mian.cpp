@@ -1,10 +1,11 @@
 #include <Arduino.h>
 #include <ST7032.h>
 
-#define CHARGING_PIN 4
-#define LIMIT 2
-#define REMIND 1
-#define FREQ 10000 //ms
+#define CHARGING_PIN A3
+#define TONE_PIN 13
+#define LIMIT 120 //min
+#define REMIND 5 //min
+#define FREQ 60000 //ms
 
 ST7032 lcd;
 
@@ -12,13 +13,13 @@ const PROGMEM String upperLine = "Welcome ";
 const PROGMEM String lowerLine = "   30min";
 
 uint8_t time = 0;
-int start = 0;
+unsigned long start = 0;
 bool state = false; // true: stay, false: charging
 bool remind = false;
 
 void alerm(){
   for(int i = 0; i < 3; i++){
-    tone(12, 988, 50);
+    tone(TONE_PIN, 988, 50);
     delay(100);
   }
 }
@@ -53,7 +54,7 @@ void setup(){
 }
 
 void loop(){
-  int now = millis();
+  unsigned long now = millis();
   bool pinState = digitalRead(CHARGING_PIN); //true: stay, false: charging
 
   if(state){
@@ -62,6 +63,7 @@ void loop(){
       state = false;
       remind = false;
     }else{
+      Serial.println(now - start);
       if(now - start > FREQ){
         time -= 1;
         start = now;
@@ -83,7 +85,7 @@ void loop(){
         delay(500);
       }
     }else{
-      if(time == 1 && !remind){
+      if(time == REMIND && !remind){
         alerm();
         remind = true;
       }
