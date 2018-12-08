@@ -17,7 +17,7 @@ unsigned long start = 0;
 bool state = false; // true: stay, false: charging
 bool remind = false;
 
-void alerm(){
+void alarm(){
   for(int i = 0; i < 3; i++){
     tone(TONE_PIN, 988, 50);
     delay(100);
@@ -25,10 +25,10 @@ void alerm(){
 }
 
 String limitText(uint8_t lim){
-  String brank = "";
+  String blank = "";
   String limStr = String(lim);
-  for(int i = 0; i < 5 - limStr.length(); i++) brank += " ";
-  return brank + String(lim) + "min";
+  for(int i = 0; i < 5 - limStr.length(); i++) blank += " ";
+  return blank + String(lim) + "min";
 }
 
 void writeChar(uint8_t x, uint8_t y, char c){
@@ -81,18 +81,18 @@ void loop(){
     if(time == 0){
       updateLcd("    Over", false);
       while(digitalRead(CHARGING_PIN)){
-        alerm();
+        alarm();
         delay(500);
       }
     }else{
       if(time == REMIND && !remind){
-        alerm();
+        alarm();
         remind = true;
       }
       updateLcd(limitText(time), false);
     }
-    delay(1000);
   }else{
     updateLcd("Charging", false);
   }
+  delay(1);
 }
