@@ -9,3 +9,6 @@
 .vscode
 .clang_complete
 .gcc-flags.json
+
+# platformio
+.travis.yml
