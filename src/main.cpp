@@ -9,8 +9,9 @@
 
 ST7032 lcd;
 
-const PROGMEM String upperLine = "Welcome ";
-const PROGMEM String lowerLine = "   30min";
+const PROGMEM String upperLineStay = " Remains";
+const PROGMEM String upperLineCharging = "Welcome!";
+const PROGMEM String lowerLine = "  200min";
 
 uint8_t time = 0;
 unsigned long start = 0;
@@ -44,7 +45,7 @@ void lcdInitialize(){
   lcd.begin(8, 2);
   lcd.setContrast(30);
 
-  updateLcd(upperLine);
+  updateLcd(upperLineCharging);
   updateLcd(lowerLine, false);
 }
 
@@ -89,9 +90,11 @@ void loop(){
         alarm();
         remind = true;
       }
+      updateLcd(upperLineStay, true);
       updateLcd(limitText(time), false);
     }
   }else{
+    updateLcd(upperLineCharging, true);
     updateLcd("Charging", false);
   }
   delay(1);
